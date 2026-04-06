@@ -1,40 +1,73 @@
-# 👕 Camisetas Opressoras - Frontend Mockup Studio (Vite + React)
+# React + TypeScript + Vite
 
-A interface do usuário (UI) para o **Gerador de Mockups** da Camisetas Opressoras. 
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Online em: [gerador-de-estampas.vercel.app](https://gerador-de-estampas.vercel.app)
+Currently, two official plugins are available:
 
-## ⚡ Desenvolvimento
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-Para rodar localmente e modificar a interface:
+## React Compiler
 
-1.  **Acesse a pasta:**
-    ```bash
-    cd frontend
-    ```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-2.  **Instale as dependências:**
-    ```bash
-    npm install
-    ```
+## Expanding the ESLint configuration
 
-3.  **Inicie o servidor localmente:**
-    ```bash
-    npm run dev
-    ```
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## 🛠️ Tecnologias Principais
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-*   **Tailwind CSS 4** - Estilização dinâmica por meio de `@theme` e `@utility`.
-*   **React Draggable** - Para o controle de posições das estampas.
-*   **JSZip & FileSaver** - Para geração de arquivos em lote sem API no servidor.
-*   **LocalForage** - Persistência das imagens enviadas no IndexedDB do navegador.
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-## 📁 Estrutura de Arquivos
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-*   `src/App.jsx` - Arquivo principal contendo a lógica central, sistema de toasts e UI.
-*   `src/index.css` - Estilos globais e componentes personalizados do sistema.
-*   `public/icons.svg` - Conjunto de ícones SVGs compactados.
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
----
-*Veja o [README principal](../README.md) na raiz do projeto para mais informações sobre o funcionamento do sistema completo.*
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
